@@ -11,7 +11,7 @@ import {
 import CartCounter from "../CartCounter";
 import Favorite from "../Favorite";
 
-const Product = ({ data, navigateToProductDetail }) => {
+const Product = React.memo(({ data, navigateToProductDetail }) => {
   const { id, title, images, price } = data;
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -66,7 +66,7 @@ const Product = ({ data, navigateToProductDetail }) => {
       />
     </View>
   );
-};
+})
 
 const styles = StyleSheet.create({
   container: {

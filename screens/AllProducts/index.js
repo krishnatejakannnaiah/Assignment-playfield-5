@@ -1,5 +1,5 @@
 // AllProductsScreen.js
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,20 +15,21 @@ const AllProducts = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await api.get("/products");
-        setProducts(response?.data?.products); // Assuming the API response is an array of products
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
+  const fetchProducts = useCallback(async () => {
+    try {
+      const response = await api.get("/products");
+      setProducts(response?.data?.products); // Assuming the API response is an array of products
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      // Optionally display an error message to the user
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   if (loading) {
     return (
@@ -48,6 +49,9 @@ const AllProducts = ({ navigation }) => {
         data={products}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
+        removeClippedSubviews={true}
+        initialNumToRender={12}
+        maxToRenderPerBatch={6}
         renderItem={({ item }) => (
           <Product
             data={item}
